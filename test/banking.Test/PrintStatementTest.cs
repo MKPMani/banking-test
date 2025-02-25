@@ -1,4 +1,5 @@
-﻿using banking.app.Validation;
+﻿using banking.app.RuleEngine;
+using banking.app.Validation;
 using banking.domain.Models;
 using banking.Test.mocks;
 using System;
@@ -12,29 +13,32 @@ namespace banking.Test
     public class PrintStatementTest
     {
         [Fact]
-        public async Task Handle_ShouldReturnTrue_WhenPrintStatementSuccessfully()
+        public async Task Handle_ShouldReturnTrue_WhenInterestCalculatedSuccessfully()
         {
             //Arrange
-            var trans = MockData.GetTransactionData();
+            var trans = MockData.GetAllTransactionData();
 
             //Act            
-            Account.AllTransactions.Add(trans);
-            var result = Account.AllTransactions.Count() > 0;
+            var res = InterestRuleEngine.TransactionWithInterest("A001", "202501");
+            
+            var interest = res.FirstOrDefault(e => e.Type == "I"); //Interest calculated
+
+            var result = interest != null;
 
             //Assert
             Assert.True(result);
         }
 
         [Fact]
-        public async Task Handle_ShouldReturnFalse_WhenRuleOutOfRange()
+        public async Task Handle_ShouldReturnFalse_WhenInvalidAccountTransaction()
         {
             //Arrange
-            var intrst = MockData.GetInterestRuleInvalidInput();
+            var trans = MockData.GetAllTransactionDataInvalid();
 
             //Act
-            var errCount = ModelValidator.ModelValidation(intrst);
+            var res = InterestRuleEngine.TransactionWithInterest("XXXX", "202501");
 
-            var result = errCount.Count == 0;
+            var result = res.Count != 0;
 
             //Assert
             Assert.False(result);

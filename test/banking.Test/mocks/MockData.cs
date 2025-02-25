@@ -56,8 +56,19 @@ namespace banking.Test.mocks
         {
             return
             [
-             new AccTransaction(){AccountNumber = "A001", Amount = 1000, Date = new DateOnly(2025,01,01) , Type = "D", TransactionId ="" },
-             new AccTransaction(){}
+             new AccTransaction(){AccountNumber = "A001", Amount = 2000, Date = new DateOnly(2025,01,01) , Type = "D", TransactionId ="20250101-01" },
+             new AccTransaction(){AccountNumber = "A001", Amount = 2500, Date = new DateOnly(2025,01,10) , Type = "D", TransactionId ="20250110-01" },
+             new AccTransaction(){AccountNumber = "A001", Amount = 1000, Date = new DateOnly(2025,01,20) , Type = "W", TransactionId ="20250120-01" },
+            ];
+        }
+
+        public static List<AccTransaction> GetAllTransactionDataInvalid()
+        {
+            return
+            [
+             new AccTransaction(){AccountNumber = "A002", Amount = 2000, Date = new DateOnly(2025,01,01) , Type = "D", TransactionId ="20250101-01" },
+             new AccTransaction(){AccountNumber = "A002", Amount = 2500, Date = new DateOnly(2025,01,10) , Type = "D", TransactionId ="20250110-01" },
+             new AccTransaction(){AccountNumber = "A002", Amount = 1000, Date = new DateOnly(2025,01,20) , Type = "W", TransactionId ="20250120-01" },
             ];
         }
 

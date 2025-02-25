@@ -14,6 +14,10 @@ namespace banking.app.RuleEngine
             var selAcct = Account.AllTransactions.Where(e => e.AccountNumber == acctno
             && e.Date.ToString("yyyyMMdd").Contains(month)).OrderBy(e => e.Date).ToList();
 
+            if (selAcct == null || selAcct.Count == 0) {
+                return [];
+            }
+
             var dt = Common.FormatDateOnly($"{month}01");
 
             var firstday = Common.FirstDayOfTheMonth(dt);
