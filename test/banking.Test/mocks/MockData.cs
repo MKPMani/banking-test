@@ -8,7 +8,7 @@ namespace banking.Test.mocks
 {
     public class MockData
     {
-        public static  AccTransaction GetTransactionData() 
+        public static AccTransaction GetTransactionData()
         {
             return new AccTransaction()
             {
@@ -16,7 +16,7 @@ namespace banking.Test.mocks
                 AccountNumber = "A001",
                 Type = "D",
                 Amount = 100,
-                TransactionId= "20250101-01"
+                TransactionId = "20250101-01"
             };
         }
 
@@ -36,7 +36,7 @@ namespace banking.Test.mocks
         {
             return new Interest()
             {
-                Date = Common.FormatDateOnly("20250101"),
+                Date = Common.FormatDateOnly("01-01-2025"),
                 RuleId = "R001",
                 Rate = 2.5
             };
@@ -51,5 +51,15 @@ namespace banking.Test.mocks
                 Rate = 105
             };
         }
+
+        public static List<AccTransaction> GetAllTransactionData()
+        {
+            return
+            [
+             new AccTransaction(){AccountNumber = "A001", Amount = 1000, Date = new DateOnly(2025,01,01) , Type = "D", TransactionId ="" },
+             new AccTransaction(){}
+            ];
+        }
+
     }
 }

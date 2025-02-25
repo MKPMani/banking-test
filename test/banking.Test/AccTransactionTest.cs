@@ -19,7 +19,7 @@ namespace banking.Test
             //Arrange
             var trans = MockData.GetTransactionData();
 
-            //Act
+            //Act            
             Account.AllTransactions.Add(trans);
             var result = Account.AllTransactions.Count() > 0;
 
@@ -28,7 +28,7 @@ namespace banking.Test
         }
 
         [Fact]
-        public async Task Handle_ShouldReturnFail_WhenTransactionWithInvalidInput()
+        public async Task Handle_ShouldReturnFalse_WhenTransactionWithInvalidInput()
         {
             //Arrange
             var trans = MockData.GetTransactionInvalidData();

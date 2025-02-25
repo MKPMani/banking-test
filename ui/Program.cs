@@ -1,16 +1,11 @@
-﻿
-
-using banking.app;
+﻿using banking.app;
 using banking.app.Helpers;
 using banking.app.RuleEngine;
+using banking.app.Services;
 using banking.app.Validation;
 using banking.domain.Helpers;
 using banking.domain.Models;
-using System.ComponentModel.DataAnnotations;
-using System.Data.Common;
-using System.Globalization;
-using System.Transactions;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+
 
 class Program
 {
@@ -22,7 +17,7 @@ class Program
     }
 
     public static void ShowMainMenu()
-    {        
+    {
         Console.WriteLine("\n-------------------\n");
         Console.WriteLine(ConstMessage.Menu);
         Console.WriteLine("\n-------------------\n");
@@ -38,7 +33,7 @@ class Program
             }
             else if (command == "I" || command == "i")
             {
-                
+
                 SetInterestRule();
             }
             else if (command == "P" || command == "p")
@@ -70,7 +65,7 @@ class Program
         {
             var trans = command.Split(" ");
 
-            if (trans[2].ToUpper() != "D" && trans[2].ToUpper() != "W")
+            if (ModelValidator.ValidateTransType(trans[2].ToUpper()))
             {
                 Console.WriteLine("\nType allowed only (D/W).");
                 ShowMainMenu();
@@ -78,15 +73,9 @@ class Program
                 return;
             }
 
-            AccTransaction transaction = new();
+            var txn = AccTransactionService.AddTransaction(trans);
 
-            transaction!.Date = Common.FormatDateOnly(trans[0]);
-            transaction!.AccountNumber = trans[1];
-            transaction!.Type = trans[2];
-            transaction!.Amount = Convert.ToDouble(trans[3]);
-            transaction!.Id = SequenceGen.GetNextSeqId(transaction!.Date);
-
-            var val = ModelValidator.ModelValidation(transaction);
+            var val = ModelValidator.ModelValidation(txn);
 
             if (val.Any())
             {
@@ -97,25 +86,20 @@ class Program
                 return;
             }
 
-            transaction.TransactionId = string.Format("{0}-{1}", transaction!.Date.ToString("yyyyMMdd"), SequenceGen.GetNextSeqId(transaction!.Date).ToString("00")); 
+            var selAcct = AccTransactionService.GetTransaction(txn.AccountNumber);
 
-            Account.AllTransactions.Add(transaction);
-
-            var selAcct = Account.AllTransactions.Where(e => e.AccountNumber == transaction!.AccountNumber).ToList();
-
-            Console.WriteLine($"\nAccount: {transaction!.AccountNumber}");
+            Console.WriteLine($"\nAccount: {txn!.AccountNumber}");
             Console.WriteLine($"Date      | Txn Id        | Type        | Amount    ");
 
             foreach (AccTransaction trs in selAcct)
             {
                 Console.WriteLine($"{trs.Date.ToString("yyyyMMdd")}  | {trs.TransactionId}   | {trs.Type}    | {trs.Amount}  ");
             }
-            
+
             Console.WriteLine("\nIs there anything else you'd like to do?");
             ShowMainMenu();
             Console.ReadLine();
         }
-                
     }
 
     public static void SetInterestRule()
@@ -123,20 +107,15 @@ class Program
         Console.Clear();
         Console.WriteLine(ConstMessage.RuleMessage);
 
-        string command = Console.ReadLine();
-                
+        string? command = Console.ReadLine();
+
         if (!string.IsNullOrEmpty(command) && command.Split(" ").Length == InputDataValidator.RulesInput)
         {
             var inst = command.Split(" ");
 
-            Interest interest = new();
+            var intr = InterestRuleService.AddInterestRule(inst);
 
-            interest!.Date = Common.FormatDateOnly(inst[0]);
-            interest!.RuleId = inst[1];
-            interest!.Rate = Convert.ToDouble(inst[2]);
-            interest!.CreationDate = DateTime.Now;
-
-            var val = ModelValidator.ModelValidation(interest);            
+            var val = ModelValidator.ModelValidation(intr);
 
             if (val.Any())
             {
@@ -147,14 +126,11 @@ class Program
                 return;
             }
 
-
-            Account.AllInterest.Add(interest);
-
             Console.WriteLine($"Date      | RuleId        | Rate (%)  ");
 
-            foreach (Interest intr in Account.AllInterest.OrderBy(x=> x.Date).ToList())
+            foreach (Interest data in Account.AllInterest.OrderBy(x => x.Date).ToList())
             {
-                Console.WriteLine($"{intr.Date.ToString("yyyyMMdd")}  | {intr.RuleId}   | {Math.Round(intr.Rate,2)}");
+                Console.WriteLine($"{data.Date.ToString("yyyyMMdd")}  | {data.RuleId}   | {Math.Round(data.Rate, 2)}");
             }
 
             Console.WriteLine("\nIs there anything else you'd like to do?");
@@ -169,15 +145,13 @@ class Program
         Console.Clear();
         Console.WriteLine(ConstMessage.PrintMessage);
 
-        string command = Console.ReadLine();
+        string? command = Console.ReadLine();
 
         if (!string.IsNullOrEmpty(command) && command.Split(" ").Length == InputDataValidator.PrintInput)
         {
             var _input = command.Split(" ");
             var acct = _input[0];
             var stdate = _input[1];
-
-            //var selAcct = Account.AllTransactions.Where(e => e.AccountNumber == acct && e.Date.ToString("yyyyMMdd").Contains(stdate)).ToList();
 
             var prnt = InterestRuleEngine.TransactionWithInterest(acct, stdate);
 
