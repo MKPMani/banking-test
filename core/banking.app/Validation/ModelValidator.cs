@@ -12,5 +12,10 @@ namespace banking.app.Validation
 
             return errresult;
         }
+
+        public static bool ValidateTransType(string input)
+        {
+            return input != "D" && input != "W";
+        }
     }
 }

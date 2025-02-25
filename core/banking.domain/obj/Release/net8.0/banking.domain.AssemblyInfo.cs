@@ -12,9 +12,9 @@ using System;
 using System.Reflection;
 
 [assembly: System.Reflection.AssemblyCompanyAttribute("banking.domain")]
-[assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
+[assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0e09496f0af59616ca14195217b045a3e00cdf03")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5710872e89080196027720ca78f4b8ddd74a2e42")]
 [assembly: System.Reflection.AssemblyProductAttribute("banking.domain")]
 [assembly: System.Reflection.AssemblyTitleAttribute("banking.domain")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

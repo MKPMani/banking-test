@@ -5,7 +5,7 @@ namespace banking.domain.Models
 {
     public class AccTransaction
     {
-        public AccTransaction() { }
+        //public AccTransaction() { }
 
         public int Id { get; set; }
 
