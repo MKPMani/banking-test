@@ -160,7 +160,7 @@ class Program
 
             foreach (AccTransaction trs in prnt)
             {
-                Console.WriteLine($"{trs.Date.ToString("yyyyMMdd")}  | {trs.TransactionId}   | {trs.Type}    | {trs.Amount}     | {trs.Balance}");
+                Console.WriteLine($"{trs.Date.ToString("yyyyMMdd")}  | {trs.TransactionId}   | {trs.Type}    | {Math.Round(trs.Amount,2)}     | {Math.Round(trs.Balance,2)}");
             }
 
             Console.WriteLine("\nIs there anything else you'd like to do?");
